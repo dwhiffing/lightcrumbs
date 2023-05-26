@@ -1,0 +1,40 @@
+{
+  "name": "tojam-2023",
+  "version": "1.1.0",
+  "description": "Tojam 2023",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "vite --port 8080",
+    "build": "vite build",
+    "serve": "vite preview",
+    "deploy": "gh-pages -d dist"
+  },
+  "homepage": "/tojam-2023",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dwhiffing/ld52.git"
+  },
+  "author": "Daniel Whiffing",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dwhiffing/ld52/issues"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^3.1.9",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-replace": "^4.0.0",
+    "@types/lodash": "^4.14.186",
+    "@types/node": "^17.0.31",
+    "@types/three": "^0.152.1",
+    "gh-pages": "^4.0.0",
+    "phaser": "^3.55.2",
+    "typescript": "^4.6.4",
+    "vite": "^2.9.8"
+  },
+  "dependencies": {
+    "@enable3d/phaser-extension": "^0.25.3",
+    "lodash": "^4.17.21",
+    "matter-js": "^0.19.0",
+    "three": "^0.152.2"
+  }
+}
