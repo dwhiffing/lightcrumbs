@@ -9,23 +9,24 @@ export default class Menu extends Phaser.Scene {
     const w = this.cameras.main.width
     const h = this.cameras.main.height
 
-    this.cameras.main.fadeFrom(1000, 155, 212, 195)
+    this.input.mouse.releasePointerLock()
+
+    this.cameras.main.fadeFrom(500, 0, 0, 0)
     // const music = this.sound.add('menu', { loop: true, volume: 0 })
     // music.play()
     // this.tweens.add({
     //   targets: music,
     //   volume: 0.4,
-    //   duration: 1000,
+    //   duration: 500,
     // })
 
     let started = false
     const onStart = () => {
       if (started) return
       started = true
-      this.cameras.main.fade(1000, 155, 212, 195, true, (_: any, b: number) => {
-        if (b === 1) {
-          this.scene.start('GameScene')
-        }
+      this.input.mouse.requestPointerLock()
+      this.cameras.main.fade(1000, 0, 0, 0, true, (_: any, b: number) => {
+        if (b === 1) this.scene.start('GameScene')
       })
     }
 

@@ -16,7 +16,9 @@ export class InputService {
     this.offset = new THREE.Vector3()
     const input = this.scene.input
 
-    const zoom = 10
+    // TODO: set zoom based on size of map
+    // when ortho cam, stay centered on map instead of player
+    const zoom = 20
     const w = this.scene.cameras.main.width / zoom
     const h = this.scene.cameras.main.height / zoom
     const config = { left: w / -2, right: w / 2, top: h / 2, bottom: h / -2 }
@@ -24,16 +26,12 @@ export class InputService {
     this.orthoCamera = this.scene.third.cameras.orthographicCamera(config)
     this.scene.third.camera = this.orthoCamera!
 
+    input.keyboard.on('keydown-F', this.switchCamera)
+
     input.keyboard.on('keydown-SPACE', () => {
-      if (this.activeCamera === 1) {
-        this.pointCameraAt(0, 0)
-        this.scene.third.camera = this.firstPersonCamera!
-      } else {
-        this.scene.third.camera = this.orthoCamera!
-      }
-      this.scene.player!.object.visible = this.activeCamera === 0
-      this.activeCamera = this.activeCamera ? 0 : 1
-      this.scene.map?.toggleWallColors()
+      // @ts-ignore
+      const { x, z } = this.scene.player?.object.position
+      this.scene.map?.addStar(x, z)
     })
 
     input.on('pointerdown', () => input.mouse.requestPointerLock())
@@ -97,6 +95,18 @@ export class InputService {
     }
 
     this.scene.player?.move(x, z)
+  }
+
+  switchCamera = () => {
+    if (this.activeCamera === 1) {
+      this.pointCameraAt(0, 0)
+      this.scene.third.camera = this.firstPersonCamera!
+    } else {
+      this.scene.third.camera = this.orthoCamera!
+    }
+    this.scene.player!.object.visible = this.activeCamera === 0
+    this.activeCamera = this.activeCamera ? 0 : 1
+    this.scene.map?.toggleWallColors()
   }
 
   pointCameraAt(dx: number, dy: number, r = 8) {

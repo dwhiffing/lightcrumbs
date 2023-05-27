@@ -11,16 +11,21 @@ const h = 6
 const w = 3
 const ratio = 8 / w
 const MAPS = [map1]
+interface Coord {
+  gid: number
+  x: number
+  z: number
+}
 
 export class MapService {
   stars: ExtendedObject3D[]
   scene: GameScene
-  mapData: { walls: number[][]; stars: any[]; start: any }
+  mapData: { walls: number[][]; exit?: Coord; start?: Coord }
 
   constructor(scene: GameScene) {
     this.scene = scene
     this.stars = []
-    this.mapData = { walls: [], stars: [], start: {} }
+    this.mapData = { walls: [], exit: undefined, start: undefined }
   }
 
   loadLevel() {
@@ -36,17 +41,17 @@ export class MapService {
       gid: d.gid,
       x: (d.x + 4) / ratio,
       z: (d.y - 4) / ratio,
-    })) as unknown as { gid: number; x: number; z: number }[]
+    })) as unknown as Coord[]
 
     this.mapData = {
       walls: MAP as number[][],
-      stars: OBJECTS.filter((g) => g.gid === 25),
-      start: OBJECTS.find((g) => g.gid === 1),
+      exit: OBJECTS.find((g) => g.gid === 25)!,
+      start: OBJECTS.find((g) => g.gid === 1)!,
     }
 
     this.addGround()
     this.addWalls()
-    this.addStars()
+    this.addExit()
   }
 
   addGround() {
@@ -65,48 +70,58 @@ export class MapService {
 
   addWalls() {
     let i = 0
-    this.mapData.walls.forEach((row, z) => {
-      row.forEach((n, x) => {
+    const y = h / 2 - 1
+    this.mapData.walls.forEach((row, _z) => {
+      row.forEach((n, _x) => {
         if (n === 0) return
-        this.addBox(
-          `wall-${i++}`,
-          w / 2 + x * w,
-          h / 2 - 1,
-          w / 2 + z * w,
-          w,
-          h,
-          w,
-          material2,
-        )
+        const x = w / 2 + _x * w
+        const z = w / 2 + _z * w
+        this.addBox(`wall-${i++}`, x, y, z, w, h, w, material2)
       })
     })
   }
 
-  addStars() {
+  addStar(x: number, z: number) {
     const svg = this.scene.cache.html.get('star')
-    const starShape = this.scene.third.transform.fromSVGtoShape(svg)
+    const shape = this.scene.third.transform.fromSVGtoShape(svg)[0]
+    // @ts-ignore
+    const star = this.scene.third.add.extrude({ shape, depth: 200 }) as any
 
-    this.mapData.stars.forEach((pos, i) => {
-      const star = this.scene.third.add.extrude({
-        shape: starShape[0],
-        // @ts-ignore
-        depth: 200,
-      }) as any
-
-      star.name = `star-${i}`
-      star.scale.set(1 / 1000, 1 / -1000, 1 / 1000)
-      star.material.color.setHex(0xffd851)
-      star.position.set(pos.x, 1, pos.z)
-      this.scene.third.physics.add.existing(star, {
-        shape: 'box',
-        ignoreScale: true,
-        width: 0.5,
-        height: 0.5,
-        depth: 0.5,
-      })
-      star.body.setCollisionFlags(6)
-      this.stars.push(star)
+    star.name = `star-${this.stars.length}`
+    star.scale.set(1 / 1000, 1 / -1000, 1 / 1000)
+    star.material = star.material.clone()
+    star.material.color.setHex(0xffd851)
+    star.position.set(x, 1, z)
+    this.scene.third.physics.add.existing(star, {
+      shape: 'box',
+      ignoreScale: true,
+      width: 0.5,
+      height: 0.5,
+      depth: 0.5,
     })
+    star.body.setCollisionFlags(6)
+    this.stars.push(star)
+  }
+
+  addExit() {
+    const { x, z } = this.mapData.exit!
+    const svg = this.scene.cache.html.get('star')
+    const shape = this.scene.third.transform.fromSVGtoShape(svg)[0]
+    // @ts-ignore
+    const star = this.scene.third.add.extrude({ shape, depth: 200 }) as any
+
+    star.name = `exit`
+    star.scale.set(1 / 1000, 1 / -1000, 1 / 1000)
+    star.material.color.setHex(0xff0000)
+    star.position.set(x, 1, z)
+    this.scene.third.physics.add.existing(star, {
+      shape: 'box',
+      ignoreScale: true,
+      width: 0.5,
+      height: 0.5,
+      depth: 0.5,
+    })
+    star.body.setCollisionFlags(6)
   }
 
   addBox = (

@@ -15,6 +15,7 @@ export default class Boot extends Phaser.Scene {
       progress.fillRect(0, +height / 2, +width * value, 60)
     })
     this.load.bitmapFont('gem', 'assets/gem.png', 'assets/gem.xml')
+    this.load.html('star', '/assets/star.svg')
 
     this.load.spritesheet('icons', 'assets/icons.png', {
       frameHeight: 50,
@@ -24,8 +25,8 @@ export default class Boot extends Phaser.Scene {
     this.load.on('complete', () => {
       progress.destroy()
 
-      this.scene.start('GameScene')
-      // this.scene.start('MenuScene')
+      // this.scene.start('GameScene')
+      this.scene.start('MenuScene')
     })
   }
 

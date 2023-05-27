@@ -7,8 +7,7 @@ export class PlayerService {
 
   constructor(scene: GameScene) {
     this.scene = scene
-    const x = this.scene.map?.mapData.start.x
-    const z = this.scene.map?.mapData.start.z
+    const { x, z } = this.scene.map?.mapData.start!
     this.object = new ExtendedObject3D()
     this.object.position.set(x, 0, z)
     this.scene.third.add.existing(this.object)
@@ -24,7 +23,7 @@ export class PlayerService {
     this.object.body.setAngularFactor(0, 0, 0)
     this.object.body.setFriction(0)
 
-    this.scene.third.load.gltf('/assets/robot.glb').then((gltf) => {
+    this.scene.third.load.gltf('robot').then((gltf) => {
       this.object.add(gltf.scene)
       const scale = 1 / 3
       this.object.scale.set(scale, scale, scale)
@@ -51,7 +50,23 @@ export class PlayerService {
     if (this.object.anims.current !== 'Idle') this.object.anims.play('Idle')
   }
 
+  teleport(x: number, z: number) {
+    this.object.body.setCollisionFlags(2)
+
+    this.object.position.set(x, 0, z)
+    this.object.body.needUpdate = true
+
+    this.object.body.once.update(() => {
+      this.object.body.setCollisionFlags(0)
+    })
+  }
+
   move(x: number, z: number) {
+    if (this.scene.finished) {
+      this.idle()
+      this.object.body?.setVelocity(0, 0, 0)
+      return
+    }
     const a = this.object.world.theta * (180 / Math.PI) + 180
     let v = 0
 
