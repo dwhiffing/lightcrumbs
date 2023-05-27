@@ -7,7 +7,10 @@ export class PlayerService {
 
   constructor(scene: GameScene) {
     this.scene = scene
+    const x = this.scene.map?.mapData.start.x
+    const z = this.scene.map?.mapData.start.z
     this.object = new ExtendedObject3D()
+    this.object.position.set(x, 0, z)
     this.scene.third.add.existing(this.object)
     this.scene.third.physics.add.existing(this.object, {
       shape: 'box',
@@ -17,9 +20,6 @@ export class PlayerService {
       depth: 0.5,
       offset: { y: -0.625 },
     })
-    this.object.body.setLinearFactor(1, 1, 1)
-    this.object.body.setAngularFactor(0, 0, 0)
-    this.object.body.setFriction(0)
 
     // add a sensor
     const sensor = new ExtendedObject3D()
@@ -38,7 +38,7 @@ export class PlayerService {
       this.object.add(gltf.scene)
       const scale = 1 / 3
       this.object.scale.set(scale, scale, scale)
-      this.object.position.setY(0)
+      // this.object.position.setY(0)
 
       this.object.traverse((child) => {
         if (child.isMesh) child.castShadow = child.receiveShadow = true

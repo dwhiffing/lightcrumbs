@@ -31,6 +31,7 @@ export default class GameScene extends Scene3D {
     })
 
     this.map = new MapService(this)
+    this.map.loadLevel()
     this.player = new PlayerService(this)
     this.ui = new UIService(this)
     this.inputService = new InputService(this)
