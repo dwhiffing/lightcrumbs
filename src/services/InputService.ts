@@ -33,6 +33,7 @@ export class InputService {
       }
       this.scene.player!.object.visible = this.activeCamera === 0
       this.activeCamera = this.activeCamera ? 0 : 1
+      this.scene.map?.toggleWallColors()
     })
 
     input.on('pointerdown', () => input.mouse.requestPointerLock())
@@ -55,7 +56,7 @@ export class InputService {
     const cam = this.scene.third.camera
     const pos = this.scene.player!.object.position
     const firstPerson = this.activeCamera === 0
-    const _pos = new THREE.Vector3(0, firstPerson ? 1 : 10, 0)
+    const _pos = new THREE.Vector3(0, firstPerson ? 2 : 10, 0)
     cam.position.copy(pos).add(_pos)
 
     let x = 0
@@ -122,5 +123,5 @@ export class InputService {
   }
 }
 
-let theta = 260
-let phi = -1.25
+let theta = 0
+let phi = 0

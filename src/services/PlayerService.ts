@@ -16,23 +16,13 @@ export class PlayerService {
       shape: 'box',
       ignoreScale: true,
       width: 0.5,
-      height: 1.25,
+      height: 2,
       depth: 0.5,
       offset: { y: -0.625 },
     })
-
-    // add a sensor
-    const sensor = new ExtendedObject3D()
-    sensor.position.setY(-0.625)
-    this.scene.third.physics.add.existing(sensor, {
-      mass: 1e-8,
-      shape: 'box',
-      width: 0.2,
-      height: 0.2,
-      depth: 0.2,
-    })
-    sensor.body.setCollisionFlags(4)
-    this.scene.third.physics.add.constraints.lock(this.object.body, sensor.body)
+    this.object.body.setLinearFactor(1, 1, 1)
+    this.object.body.setAngularFactor(0, 0, 0)
+    this.object.body.setFriction(0)
 
     this.scene.third.load.gltf('/assets/robot.glb').then((gltf) => {
       this.object.add(gltf.scene)

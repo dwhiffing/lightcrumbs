@@ -15,7 +15,7 @@ export default class GameScene extends Scene3D {
   }
 
   preload() {
-    this.third.load.preload('sky', '/assets/sky.png')
+    this.third.load.preload('sky', '/assets/sky-black.png')
     this.load.html('star', '/assets/star.svg')
   }
 
@@ -24,7 +24,12 @@ export default class GameScene extends Scene3D {
   }
 
   async create() {
-    await this.third.warpSpeed('-ground', '-sky')
+    const { lights } = await this.third.warpSpeed('light')
+    if (lights) {
+      lights.hemisphereLight.intensity = 0
+      lights.ambientLight.intensity = 1
+      lights.directionalLight.intensity = 0
+    }
 
     this.third.load.texture('sky').then((sky) => {
       this.third.scene.background = sky

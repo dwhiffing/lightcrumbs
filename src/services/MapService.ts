@@ -3,8 +3,8 @@ import GameScene from '../scenes/Game'
 import map1 from '../../map1.json'
 import chunk from 'lodash/chunk'
 
-const material = { phong: { color: 0x21572f } }
-const material2 = { phong: { color: 0xffffff } }
+const material = { phong: { transparent: false, color: 0x000000 } }
+const material2 = { phong: { transparent: false, color: 0x151515 } }
 // wall height
 const h = 6
 // wall width/depth
@@ -94,9 +94,9 @@ export class MapService {
       }) as any
 
       star.name = `star-${i}`
-      star.scale.set(1 / 500, 1 / -500, 1 / 500)
+      star.scale.set(1 / 1000, 1 / -1000, 1 / 1000)
       star.material.color.setHex(0xffd851)
-      star.position.set(pos.x, 0, pos.z)
+      star.position.set(pos.x, 1, pos.z)
       this.scene.third.physics.add.existing(star, {
         shape: 'box',
         ignoreScale: true,
@@ -123,6 +123,15 @@ export class MapService {
       { name, x, z, y, width, depth, height, mass: 0 },
       material,
     )
+  }
+
+  toggleWallColors() {
+    this.scene.third.physics.rigidBodies.forEach((b) => {
+      if (b.name.includes('wall')) {
+        const mat = b.material as any
+        // mat.color.setHex(mat.color.r === 0 ? 0x151515 : 0x000000)
+      }
+    })
   }
 
   update() {
