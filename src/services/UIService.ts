@@ -1,12 +1,24 @@
-export default class UIService {
-  scene: Phaser.Scene
+import GameScene from '../scenes/Game'
 
-  constructor(scene: Phaser.Scene) {
+export class UIService {
+  scene: GameScene
+  scoreText: Phaser.GameObjects.Text
+  score: number
+
+  constructor(scene: GameScene) {
     this.scene = scene
+    this.score = 0
 
-    this.scene.input.keyboard.on('keydown-F', () => {
-      this.scene.scale.startFullscreen()
-    })
+    // this.scene.input.keyboard.on('keydown-F', () => {
+    //   this.scene.scale.startFullscreen()
+    // })
+
+    this.scoreText = this.scene.add
+      .text(32, this.scene.cameras.main.height - 32, 'score: 0', {
+        fontSize: '32px',
+      })
+      .setOrigin(0, 1)
+      .setDepth(1)
 
     const muteButton = this.scene.add
       .sprite(
@@ -23,5 +35,10 @@ export default class UIService {
       })
   }
 
-  destroy() {}
+  setScore(score: number) {
+    this.score += score
+    this.scoreText.setText(`score: ${this.score}`)
+  }
+
+  update() {}
 }

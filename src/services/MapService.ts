@@ -1,6 +1,7 @@
 import { ExtendedObject3D } from '@enable3d/phaser-extension'
-import GameScene from './Game'
+import GameScene from '../scenes/Game'
 
+const material = { phong: { transparent: true, color: 0x21572f } }
 export class MapService {
   stars: ExtendedObject3D[]
   scene: GameScene
@@ -8,7 +9,12 @@ export class MapService {
   constructor(scene: GameScene) {
     this.scene = scene
     this.stars = []
-    const platformMaterial = { phong: { transparent: true, color: 0x21572f } }
+
+    this.addPlatforms()
+    this.addStars()
+  }
+
+  addPlatforms() {
     this.scene.third.physics.add.box(
       {
         name: 'platform-ground',
@@ -18,10 +24,10 @@ export class MapService {
         height: 2,
         mass: 0,
       },
-      platformMaterial,
+      material,
     )
-
-    // add stars
+  }
+  addStars() {
     const svg = this.scene.cache.html.get('star')
     const starShape = this.scene.third.transform.fromSVGtoShape(svg)
     const starPositions = [
