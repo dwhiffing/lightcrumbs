@@ -3,6 +3,7 @@ import replace from '@rollup/plugin-replace'
 
 export default defineConfig({
   base: '/tojam-2023/',
+  server: { hmr: false },
   build: {
     rollupOptions: {
       plugins: [
