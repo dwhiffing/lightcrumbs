@@ -1,5 +1,5 @@
 import { Scene3D } from '@enable3d/phaser-extension'
-import { MapService } from '../services/MapService'
+import { MapService, MAP_COUNT } from '../services/MapService'
 import { PlayerService } from '../services/PlayerService'
 import { UIService } from '../services/UIService'
 import { InputService } from '../services/InputService'
@@ -10,13 +10,16 @@ export default class GameScene extends Scene3D {
   ui?: UIService
   inputService?: InputService
   finished: boolean
+  level: number
 
   constructor() {
     super({ key: 'GameScene' })
     this.finished = false
+    this.level = 0
   }
 
-  init() {
+  init(data: any) {
+    this.level = data?.level ?? 0
     this.accessThirdDimension({ gravity: { x: 0, y: -20, z: 0 } })
     this.third.load.preload('sky', '/assets/sky-black.png')
     this.third.load.preload('robot', '/assets/robot.glb')
@@ -37,7 +40,7 @@ export default class GameScene extends Scene3D {
     })
 
     this.map = new MapService(this)
-    this.map.loadLevel()
+    this.map.loadLevel(this.level)
     this.player = new PlayerService(this)
     this.ui = new UIService(this)
     this.inputService = new InputService(this)
@@ -60,8 +63,12 @@ export default class GameScene extends Scene3D {
         if (this.inputService?.activeCamera === 0) {
           this.cameras.main.fade(1000, 0, 0, 0, true, (_: any, b: number) => {
             if (b === 1) {
-              document.getElementById('enable3d-three-canvas')?.remove()
-              this.scene.start('MenuScene')
+              if (this.level + 1 > MAP_COUNT - 1) {
+                document.getElementById('enable3d-three-canvas')?.remove()
+                this.scene.start('MenuScene')
+              } else {
+                this.scene.start('GameScene', { level: this.level + 1 })
+              }
             }
           })
         } else {
