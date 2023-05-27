@@ -1,8 +1,9 @@
 import { Scene3D } from '@enable3d/phaser-extension'
-import { MapService, MAP_COUNT } from '../services/MapService'
+import { MapService } from '../services/MapService'
 import { PlayerService } from '../services/PlayerService'
 import { UIService } from '../services/UIService'
 import { InputService } from '../services/InputService'
+import { MAPS } from '../maps'
 
 export default class GameScene extends Scene3D {
   map?: MapService
@@ -63,7 +64,7 @@ export default class GameScene extends Scene3D {
         if (this.inputService?.activeCamera === 0) {
           this.cameras.main.fade(1000, 0, 0, 0, true, (_: any, b: number) => {
             if (b === 1) {
-              if (this.level + 1 > MAP_COUNT - 1) {
+              if (this.level + 1 > MAPS.length - 1) {
                 document.getElementById('enable3d-three-canvas')?.remove()
                 this.scene.start('MenuScene')
               } else {

@@ -1,8 +1,7 @@
 import { ExtendedObject3D } from '@enable3d/phaser-extension'
 import GameScene from '../scenes/Game'
-import map1 from '../../map1.json'
-import map2 from '../../map2.json'
 import chunk from 'lodash/chunk'
+import { MAPS } from '../maps'
 
 const material = { phong: { transparent: false, color: 0x000000 } }
 const material2 = { phong: { transparent: false, color: 0x151515 } }
@@ -11,8 +10,6 @@ const h = 6
 // wall width/depth
 const w = 3
 const ratio = 8 / w
-const MAPS = [map1, map2]
-export const MAP_COUNT = MAPS.length
 interface Coord {
   gid: number
   x: number
