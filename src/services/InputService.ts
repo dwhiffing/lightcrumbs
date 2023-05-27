@@ -16,16 +16,20 @@ export class InputService {
     this.offset = new THREE.Vector3()
     const input = this.scene.input
 
-    const zoom = 70
+    const zoom = 10
     const w = this.scene.cameras.main.width / zoom
     const h = this.scene.cameras.main.height / zoom
     const config = { left: w / -2, right: w / 2, top: h / 2, bottom: h / -2 }
     this.firstPersonCamera = this.scene.third.camera
     this.orthoCamera = this.scene.third.cameras.orthographicCamera(config)
+    this.scene.third.camera = this.orthoCamera!
 
     input.keyboard.on('keydown-SPACE', () => {
       if (this.activeCamera === 1) {
         this.pointCameraAt(0, 0)
+        this.scene.third.camera = this.firstPersonCamera!
+      } else {
+        this.scene.third.camera = this.orthoCamera!
       }
       this.scene.player!.object.visible = this.activeCamera === 0
       this.activeCamera = this.activeCamera ? 0 : 1
@@ -51,7 +55,7 @@ export class InputService {
     const cam = this.scene.third.camera
     const pos = this.scene.player!.object.position
     const firstPerson = this.activeCamera === 0
-    const _pos = new THREE.Vector3(0, firstPerson ? 1 : 40, 0)
+    const _pos = new THREE.Vector3(0, firstPerson ? 1 : 10, 0)
     cam.position.copy(pos).add(_pos)
 
     let x = 0
