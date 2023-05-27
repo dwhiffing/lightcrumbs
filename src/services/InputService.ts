@@ -1,5 +1,6 @@
 import { THREE } from '@enable3d/phaser-extension'
 import { ThreeGraphics } from '@enable3d/three-graphics'
+import { SPEED, ZOOM } from '../constants'
 import GameScene from '../scenes/Game'
 
 export class InputService {
@@ -18,9 +19,8 @@ export class InputService {
 
     // TODO: set zoom based on size of map
     // when ortho cam, stay centered on map instead of player
-    const zoom = 20
-    const w = this.scene.cameras.main.width / zoom
-    const h = this.scene.cameras.main.height / zoom
+    const w = this.scene.cameras.main.width / ZOOM
+    const h = this.scene.cameras.main.height / ZOOM
     const config = { left: w / -2, right: w / 2, top: h / 2, bottom: h / -2 }
     this.firstPersonCamera = this.scene.third.camera
     this.orthoCamera = this.scene.third.cameras.orthographicCamera(config)
@@ -60,37 +60,36 @@ export class InputService {
     let x = 0
     let z = 0
 
-    const speed = 7
     const rotation = cam.getWorldDirection(new THREE.Vector3())
 
     if (firstPerson) {
       const _theta = Math.atan2(rotation.x, rotation.z)
       if (this.keys!.w.isDown) {
-        x = Math.sin(_theta) * speed
-        z = Math.cos(_theta) * speed
+        x = Math.sin(_theta) * SPEED
+        z = Math.cos(_theta) * SPEED
       } else if (this.keys!.s.isDown) {
-        x = -(Math.sin(_theta) * speed)
-        z = -(Math.cos(_theta) * speed)
+        x = -(Math.sin(_theta) * SPEED)
+        z = -(Math.cos(_theta) * SPEED)
       }
 
       if (this.keys!.a.isDown) {
-        x = Math.sin(_theta + Math.PI * 0.5) * speed
-        z = Math.cos(_theta + Math.PI * 0.5) * speed
+        x = Math.sin(_theta + Math.PI * 0.5) * SPEED
+        z = Math.cos(_theta + Math.PI * 0.5) * SPEED
       } else if (this.keys!.d.isDown) {
-        x = Math.sin(_theta - Math.PI * 0.5) * speed
-        z = Math.cos(_theta - Math.PI * 0.5) * speed
+        x = Math.sin(_theta - Math.PI * 0.5) * SPEED
+        z = Math.cos(_theta - Math.PI * 0.5) * SPEED
       }
     } else {
       cam.lookAt(pos.clone().add(new THREE.Vector3(0, 2, 0)))
       if (this.keys!.a.isDown) {
-        x = -speed
+        x = -SPEED
       } else if (this.keys!.d.isDown) {
-        x = speed
+        x = SPEED
       }
       if (this.keys!.w.isDown) {
-        z = -speed
+        z = -SPEED
       } else if (this.keys!.s.isDown) {
-        z = speed
+        z = SPEED
       }
     }
 

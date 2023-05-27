@@ -4,6 +4,7 @@ import { PlayerService } from '../services/PlayerService'
 import { UIService } from '../services/UIService'
 import { InputService } from '../services/InputService'
 import { MAPS } from '../maps'
+import { FADE_DURATION } from '../constants'
 
 export default class GameScene extends Scene3D {
   map?: MapService
@@ -28,7 +29,8 @@ export default class GameScene extends Scene3D {
 
   async create() {
     this.finished = false
-    this.cameras.main.fadeFrom(1000, 0, 0, 0)
+    const dur = FADE_DURATION
+    this.cameras.main.fadeFrom(dur, 0, 0, 0)
     const { lights } = await this.third.warpSpeed('light')
     if (lights) {
       lights.hemisphereLight.intensity = 0
@@ -62,7 +64,7 @@ export default class GameScene extends Scene3D {
       if (/exit/.test(otherObject.name) && !this.finished) {
         this.finished = true
         if (this.inputService?.activeCamera === 0) {
-          this.cameras.main.fade(1000, 0, 0, 0, true, (_: any, b: number) => {
+          this.cameras.main.fade(dur, 0, 0, 0, true, (_: any, b: number) => {
             if (b === 1) {
               if (this.level + 1 > MAPS.length - 1) {
                 document.getElementById('enable3d-three-canvas')?.remove()
@@ -74,12 +76,12 @@ export default class GameScene extends Scene3D {
           })
         } else {
           const { x, z } = this.map?.mapData.start!
-          this.cameras.main.fade(1000, 0, 0, 0, true, (_: any, b: number) => {
+          this.cameras.main.fade(dur, 0, 0, 0, true, (_: any, b: number) => {
             if (b === 1) {
               this.player?.teleport(x, z)
               setTimeout(() => {
                 this.finished = false
-                this.cameras.main.fadeFrom(1000, 0, 0, 0)
+                this.cameras.main.fadeFrom(dur, 0, 0, 0)
                 this.inputService?.switchCamera()
               }, 50)
             }

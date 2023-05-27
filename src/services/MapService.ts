@@ -2,6 +2,7 @@ import { ExtendedObject3D } from '@enable3d/phaser-extension'
 import GameScene from '../scenes/Game'
 import chunk from 'lodash/chunk'
 import { MAPS } from '../maps'
+import { DEBUG } from '../constants'
 
 const material = { phong: { transparent: false, color: 0x000000 } }
 const material2 = { phong: { transparent: false, color: 0x151515 } }
@@ -143,7 +144,7 @@ export class MapService {
     this.scene.third.physics.rigidBodies.forEach((b) => {
       if (b.name.includes('wall')) {
         const mat = b.material as any
-        // mat.color.setHex(mat.color.r === 0 ? 0x151515 : 0x000000)
+        if (!DEBUG) mat.color.setHex(mat.color.r === 0 ? 0x151515 : 0x000000)
       }
     })
   }

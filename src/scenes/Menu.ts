@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import { FADE_DURATION } from '../constants'
 
 export default class Menu extends Phaser.Scene {
   constructor() {
@@ -10,8 +11,9 @@ export default class Menu extends Phaser.Scene {
     const h = this.cameras.main.height
 
     this.input.mouse.releasePointerLock()
+    const dur = FADE_DURATION
 
-    this.cameras.main.fadeFrom(500, 0, 0, 0)
+    this.cameras.main.fadeFrom(dur, 0, 0, 0)
     // const music = this.sound.add('menu', { loop: true, volume: 0 })
     // music.play()
     // this.tweens.add({
@@ -25,8 +27,8 @@ export default class Menu extends Phaser.Scene {
       if (started) return
       started = true
       this.input.mouse.requestPointerLock()
-      this.cameras.main.fade(1000, 0, 0, 0, true, (_: any, b: number) => {
-        if (b === 1) this.scene.start('GameScene')
+      this.cameras.main.fade(dur, 0, 0, 0, true, (_: any, b: number) => {
+        if (b === 1) this.scene.start('GameScene', { level: 0 })
       })
     }
 
