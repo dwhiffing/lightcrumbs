@@ -115,6 +115,11 @@ export class InputService {
   }
 
   switchCamera = () => {
+    this.scene.tweens.add({
+      targets: this.scene.music,
+      volume: this.activeCamera === 1 ? 0.01 : 0.5,
+      duration: 300,
+    })
     if (this.activeCamera === 1) {
       this.pointCameraAt(0, 0)
       this.scene.third.camera = this.firstPersonCamera!

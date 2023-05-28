@@ -13,6 +13,7 @@ export default class GameScene extends Scene3D {
   enemy?: EnemyService
   ui?: UIService
   inputService?: InputService
+  music?: Phaser.Sound.BaseSound
   finished: boolean
   level: number
 
@@ -33,6 +34,8 @@ export default class GameScene extends Scene3D {
     this.finished = false
     const dur = FADE_DURATION
     this.cameras.main.fadeFrom(dur, 0, 0, 0)
+    this.music = this.sound.add('game', { loop: true, volume: 0.5 })
+    this.music.play()
     const { lights } = await this.third.warpSpeed('light')
     if (lights) {
       lights.hemisphereLight.intensity = 0

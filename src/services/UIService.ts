@@ -20,19 +20,19 @@ export class UIService {
       .setOrigin(0, 1)
       .setDepth(1)
 
-    const muteButton = this.scene.add
-      .sprite(
-        this.scene.cameras.main.width,
-        this.scene.cameras.main.height,
-        'icons',
-        this.scene.sound.mute ? 0 : 1,
-      )
-      .setOrigin(1.2, 1.2)
-      .setInteractive()
-      .on('pointerdown', () => {
-        this.scene.sound.mute = !this.scene.sound.mute
-        muteButton.setFrame(this.scene.sound.mute ? 1 : 0)
-      })
+    // const muteButton = this.scene.add
+    //   .sprite(
+    //     this.scene.cameras.main.width,
+    //     this.scene.cameras.main.height,
+    //     'icons',
+    //     this.scene.sound.mute ? 0 : 1,
+    //   )
+    //   .setOrigin(1.2, 1.2)
+    //   .setInteractive()
+    //   .on('pointerdown', () => {
+    //     this.scene.sound.mute = !this.scene.sound.mute
+    //     muteButton.setFrame(this.scene.sound.mute ? 1 : 0)
+    //   })
   }
 
   setScore(score: number) {
