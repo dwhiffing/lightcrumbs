@@ -17,7 +17,6 @@ export default class Menu extends Phaser.Scene {
     const h = this.cameras.main.height
     let helpTextIndex = 0
 
-    this.input.mouse.releasePointerLock()
     const dur = FADE_DURATION
 
     let title = this.add.image(w / 2, h / 2 - 120, 'title').setScale(2)
@@ -37,7 +36,6 @@ export default class Menu extends Phaser.Scene {
       if (started) return
       this.sound.play('finish', { volume: 0.5 })
       started = true
-      this.input.mouse.requestPointerLock()
       this.tweens.add({ targets: music, volume: 0, duration: dur })
       this.cameras.main.fade(dur, 0, 0, 0, true, (_: any, b: number) => {
         if (b === 1) {

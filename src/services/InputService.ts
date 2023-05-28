@@ -35,7 +35,7 @@ export class InputService {
     this.orthoCamera = this.scene.third.cameras.orthographicCamera(config)
     this.switchCamera()
 
-    if (DEBUG) {
+    if (true || DEBUG) {
       input.keyboard.on('keydown-F', this.switchCamera)
       input.keyboard.on('keydown-L', this.nextLevel)
       input.keyboard.on('keydown-K', this.prevLevel)
@@ -52,14 +52,6 @@ export class InputService {
       this.scene.map?.addCrumb(x, z)
       this.scene.ui?.useCrumb()
       this.scene.sound.play('place')
-    })
-
-    input.on('pointerdown', () => input.mouse.requestPointerLock())
-    input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-      if (!input.mouse.locked || !this.scene.player || this.activeCamera === 1)
-        return
-
-      this.pointCameraAt(pointer.movementX, pointer.movementY)
     })
 
     this.keys = {
@@ -91,12 +83,11 @@ export class InputService {
           z = -(Math.cos(_theta) * SPEED)
         }
 
+        const _s = 10
         if (this.keys!.a.isDown) {
-          x = Math.sin(_theta + Math.PI * 0.5) * SPEED
-          z = Math.cos(_theta + Math.PI * 0.5) * SPEED
+          this.pointCameraAt(-_s, 0)
         } else if (this.keys!.d.isDown) {
-          x = Math.sin(_theta - Math.PI * 0.5) * SPEED
-          z = Math.cos(_theta - Math.PI * 0.5) * SPEED
+          this.pointCameraAt(_s, 0)
         }
       } else {
         if (this.keys!.a.isDown) {
@@ -165,7 +156,6 @@ export class InputService {
   pointCameraAt(dx: number, dy: number, r = 8) {
     const p = this.scene.player!.object.position.clone()
     const cam = this.scene.third.camera
-    cam.position.copy(p)
 
     theta -= dx * (0.25 / 2)
     theta %= 360
