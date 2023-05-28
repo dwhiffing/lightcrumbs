@@ -17,6 +17,7 @@ export default class Boot extends Phaser.Scene {
     this.load.image('title', '/assets/title.png')
     this.load.bitmapFont('gem', 'assets/gem.png', 'assets/gem.xml')
     this.load.html('star', '/assets/star.svg')
+    this.load.image('star-ui', '/assets/star-svg.png')
     this.load.audio('steps', '/assets/steps.ogg')
     this.load.audio('door', '/assets/door.ogg')
     this.load.audio('place', '/assets/finish.ogg')

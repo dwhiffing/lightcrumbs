@@ -52,6 +52,10 @@ export default class GameScene extends Scene3D {
     this.player = new PlayerService(this)
     this.ui = new UIService(this)
     this.inputService = new InputService(this)
+
+    // TODO: get crumbs from map
+    this.ui?.setCrumbs(5)
+
     if (this.map?.mapData.enemy) this.enemy = new EnemyService(this)
 
     if (DEBUG) this.third.physics.debug?.enable()
@@ -66,7 +70,6 @@ export default class GameScene extends Scene3D {
           otherObject.userData.dead = true
           otherObject.visible = false
           this.sound.play('scale')
-          this.ui!.setScore(10)
         }
       }
       if (/exit/.test(otherObject.name) && !this.finished) {

@@ -2,42 +2,36 @@ import GameScene from '../scenes/Game'
 
 export class UIService {
   scene: GameScene
-  scoreText: Phaser.GameObjects.Text
-  score: number
-
+  crumbs: Phaser.GameObjects.Image[]
+  crumbCount: number
   constructor(scene: GameScene) {
     this.scene = scene
-    this.score = 0
 
+    const h = this.scene.cameras.main.height
     // this.scene.input.keyboard.on('keydown-F', () => {
     //   this.scene.scale.startFullscreen()
     // })
 
-    this.scoreText = this.scene.add
-      .text(32, this.scene.cameras.main.height - 32, '', {
-        fontSize: '32px',
-      })
-      .setOrigin(0, 1)
-      .setDepth(1)
-
-    // const muteButton = this.scene.add
-    //   .sprite(
-    //     this.scene.cameras.main.width,
-    //     this.scene.cameras.main.height,
-    //     'icons',
-    //     this.scene.sound.mute ? 0 : 1,
-    //   )
-    //   .setOrigin(1.2, 1.2)
-    //   .setInteractive()
-    //   .on('pointerdown', () => {
-    //     this.scene.sound.mute = !this.scene.sound.mute
-    //     muteButton.setFrame(this.scene.sound.mute ? 1 : 0)
-    //   })
+    this.crumbs = []
+    this.crumbCount = 0
+    for (let i = 0; i < 10; i++) {
+      this.crumbs.push(
+        this.scene.add
+          .image(10 + 60 * i, h - 10, 'star-ui')
+          .setScale(0.2)
+          .setOrigin(0, 1)
+          .setAlpha(0),
+      )
+    }
   }
 
-  setScore(score: number) {
-    this.score += score
-    // this.scoreText.setText(`score: ${this.score}`)
+  setCrumbs(num: number) {
+    this.crumbCount = num
+    this.crumbs.forEach((c, i) => c.setAlpha(i < num ? 1 : 0))
+  }
+
+  useCrumb() {
+    this.setCrumbs(this.crumbCount - 1)
   }
 
   update() {}

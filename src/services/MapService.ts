@@ -94,7 +94,7 @@ export class MapService {
     })
   }
 
-  addStar(x: number, z: number) {
+  addCrumb(x: number, z: number) {
     const svg = this.scene.cache.html.get('star')
     const shape = this.scene.third.transform.fromSVGtoShape(svg)[0]
     // @ts-ignore

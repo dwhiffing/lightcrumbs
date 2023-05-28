@@ -41,9 +41,11 @@ export class InputService {
     // }
     input.keyboard.on('keydown-R', this.restartLevel)
     input.keyboard.on('keydown-SPACE', () => {
+      if (this.scene.ui!.crumbCount === 0) return
       // @ts-ignore
       const { x, z } = this.scene.player?.object.position
-      this.scene.map?.addStar(x, z)
+      this.scene.map?.addCrumb(x, z)
+      this.scene.ui?.useCrumb()
       this.scene.sound.play('place')
     })
 
