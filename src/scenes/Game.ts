@@ -33,11 +33,13 @@ export default class GameScene extends Scene3D {
     this.finished = false
     const dur = FADE_DURATION
     this.cameras.main.fadeFrom(dur, 0, 0, 0)
-    this.music = this.sound.add('game', {
-      loop: true,
-      volume: GAME_MUSIC_VOLUME,
-    })
-    this.music.play()
+    if (!this.music) {
+      this.music = this.sound.add('game', {
+        loop: true,
+        volume: GAME_MUSIC_VOLUME,
+      })
+      this.music.play()
+    }
     const { lights } = await this.third.warpSpeed('light')
     if (lights) {
       lights.hemisphereLight.intensity = 0
