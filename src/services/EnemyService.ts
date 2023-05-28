@@ -74,11 +74,25 @@ export class EnemyService {
         this.object.body.setAngularVelocityY(0)
       }
     })
+
+    const listener = new THREE.AudioListener()
+    this.scene.third.camera.add(listener)
+    const sound = new THREE.PositionalAudio(listener)
+    const audioLoader = new THREE.AudioLoader()
+    audioLoader.load('assets/monster.mp3', function (buffer) {
+      sound.setBuffer(buffer)
+      sound.setRefDistance(3)
+      sound.setRolloffFactor(7)
+      sound.loop = true
+      sound.play()
+    })
+
+    this.object.add(sound)
   }
 
   update() {
     if (this.scene.inputService?.activeCamera === 1) return
-    const speed = 4
+    const speed = 3.5
     const rotation = this.object.getWorldDirection(
       new THREE.Vector3()?.setFromEuler?.(this.object.rotation),
     )
