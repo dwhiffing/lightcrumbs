@@ -79,12 +79,14 @@ export default class GameScene extends Scene3D {
         if (this.inputService?.activeCamera === 0) {
           this.sound.play('door')
 
-          this.cameras.main.fade(dur, 0, 0, 0, true, (_: any, b: number) => {
+          const _dur = dur * 2
+          this.cameras.main.fade(_dur, 0, 0, 0, true, (_: any, b: number) => {
             if (b === 1) {
               if (this.level + 1 > MAPS.length - 1) {
                 document.getElementById('enable3d-three-canvas')?.remove()
                 this.scene.start('MenuScene', { win: true })
               } else {
+                this.player?.stepSound.stop()
                 this.scene.start('GameScene', { level: this.level + 1 })
               }
             }
