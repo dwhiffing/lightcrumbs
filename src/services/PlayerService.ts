@@ -69,17 +69,18 @@ export class PlayerService {
     }
     const a = this.object.world.theta * (180 / Math.PI) + 180
     let v = 0
+    const s = 15
 
     if (x < 0) {
-      if (a > 100 || a < 80) v = a > 90 && a < 270 ? -10 : 10
+      if (a > 110 || a < 70) v = a > 90 && a < 270 ? -s : s
     } else if (x > 0) {
-      if (a > 280 || a < 260) v = a > 90 && a < 270 ? 10 : -10
+      if (a > 290 || a < 250) v = a > 90 && a < 270 ? s : -s
     }
 
     if (z < 0) {
-      if (a > 10 || a > 350) v = a < 180 ? -10 : 10
+      if (a > 20 || a > 340) v = a < 180 ? -s : s
     } else if (z > 0) {
-      if (a > 190 || a < 170) v = a < 180 ? 10 : -10
+      if (a > 200 || a < 160) v = a < 180 ? s : -s
     }
 
     if (x !== 0 || z !== 0) {
