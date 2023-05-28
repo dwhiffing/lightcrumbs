@@ -26,7 +26,7 @@ export default class GameScene extends Scene3D {
   init(data: any) {
     this.level = data?.level ?? 0
     this.accessThirdDimension({ gravity: { x: 0, y: -20, z: 0 } })
-    this.third.load.preload('sky', '/assets/sky-black.png')
+    this.third.load.preload('sky', 'assets/sky-black.png')
   }
 
   async create() {

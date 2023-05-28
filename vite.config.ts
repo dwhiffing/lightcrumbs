@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import replace from '@rollup/plugin-replace'
 
 export default defineConfig({
-  base: '/lightcrumbs/',
+  base: '',
   server: { hmr: false },
   build: {
     rollupOptions: {
