@@ -99,14 +99,14 @@ export class InputService {
       }
     } else {
       if (this.keys!.a.isDown) {
-        x = -SPEED * 1.5
+        x = -SPEED * 2
       } else if (this.keys!.d.isDown) {
-        x = SPEED * 1.5
+        x = SPEED * 2
       }
       if (this.keys!.w.isDown) {
-        z = -SPEED * 1.5
+        z = -SPEED * 2
       } else if (this.keys!.s.isDown) {
-        z = SPEED * 1.5
+        z = SPEED * 2
       }
     }
 

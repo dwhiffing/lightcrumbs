@@ -29,22 +29,24 @@ export class PlayerService {
     this.stepSound.play()
     this.stepSound.pause()
 
-    this.scene.third.load.gltf('robot').then((gltf) => {
-      this.object.add(gltf.scene)
-      const scale = 0.75
-      this.object.scale.set(scale, scale, scale)
-      // this.object.position.setY(0)
+    const body = this.scene.third.add.sphere(
+      { radius: 1.1 },
+      { phong: { transparent: false, color: 0x111166 } },
+    )
+    const eye1 = this.scene.third.add.sphere(
+      { radius: 0.25, x: 0.4, z: 1 },
+      { phong: { transparent: false, color: 0xffd851 } },
+    )
+    const eye2 = this.scene.third.add.sphere(
+      { radius: 0.25, x: -0.4, z: 1 },
+      { phong: { transparent: false, color: 0xffd851 } },
+    )
 
-      this.object.traverse((child) => {
-        if (child.isMesh) child.castShadow = child.receiveShadow = true
-      })
+    this.object.add(body)
+    this.object.add(eye1)
+    this.object.add(eye2)
 
-      this.scene.third.animationMixers.add(this.object.anims.mixer)
-      gltf.animations.forEach((animation) =>
-        this.object!.anims.add(animation.name, animation),
-      )
-      this.idle()
-    })
+    this.idle()
   }
 
   walk() {
@@ -57,8 +59,6 @@ export class PlayerService {
         })
         this.stepSound.resume()
       }
-
-      this.object.anims.play('Walking')
     }
   }
 
@@ -70,8 +70,6 @@ export class PlayerService {
         duration: 300,
         onComplete: () => this.stepSound.pause(),
       })
-
-      this.object.anims.play('Idle')
     }
   }
 
@@ -94,18 +92,18 @@ export class PlayerService {
     }
     const a = this.object.world.theta * (180 / Math.PI) + 180
     let v = 0
-    const s = 15
+    const s = 4
 
     if (x < 0) {
-      if (a > 110 || a < 70) v = a > 90 && a < 270 ? -s : s
+      if (a > 95 || a < 85) v = a > 90 && a < 270 ? -s : s
     } else if (x > 0) {
-      if (a > 290 || a < 250) v = a > 90 && a < 270 ? s : -s
+      if (a > 275 || a < 265) v = a > 90 && a < 270 ? s : -s
     }
 
     if (z < 0) {
-      if (a > 20 || a > 340) v = a < 180 ? -s : s
+      if (a > 5 || a > 355) v = a < 180 ? -s : s
     } else if (z > 0) {
-      if (a > 200 || a < 160) v = a < 180 ? s : -s
+      if (a > 185 || a < 175) v = a < 180 ? s : -s
     }
 
     if (x !== 0 || z !== 0) {

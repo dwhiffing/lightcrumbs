@@ -26,15 +26,9 @@ export default class Boot extends Phaser.Scene {
     this.load.audio('finish', '/assets/place.ogg')
     this.load.audio('scale', '/assets/scale.ogg')
 
-    this.load.spritesheet('icons', 'assets/icons.png', {
-      frameHeight: 50,
-      frameWidth: 49,
-    })
-
     this.load.on('complete', () => {
       progress.destroy()
 
-      // this.scene.start('GameScene')
       this.scene.start('MenuScene')
     })
   }

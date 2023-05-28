@@ -40,24 +40,15 @@ export default class Menu extends Phaser.Scene {
     }
 
     const onClickTopButton = () => {
-      this.sound.play('finish')
+      this.sound.play('finish', { volume: 0.5 })
       onStart()
     }
-    const playButton = this.add
+    this.add
       .bitmapText(w / 2, h - 160, 'gem', 'Play')
       .setOrigin(0.5)
       .setFontSize(64)
       .setInteractive()
       .on('pointerdown', onClickTopButton)
-
-    // const muteButton = this.add
-    //   .sprite(w, h, 'icons', 1)
-    //   .setOrigin(1.2, 1.2)
-    //   .setInteractive()
-    //   .on('pointerdown', () => {
-    //     this.sound.mute = !this.sound.mute
-    //     muteButton.setFrame(this.sound.mute ? 1 : 0)
-    //   })
 
     if (DEBUG) this.scene.start('GameScene', { level: 1 })
   }
