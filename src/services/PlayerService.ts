@@ -1,6 +1,8 @@
 import { THREE, ExtendedObject3D } from '@enable3d/phaser-extension'
 import GameScene from '../scenes/Game'
 
+let tweening1 = false
+let tweening2 = false
 export class PlayerService {
   scene: GameScene
   object: ExtendedObject3D
@@ -47,37 +49,54 @@ export class PlayerService {
     this.object.add(eye1)
     this.object.add(eye2)
 
+    const start = this.scene.map?.mapData.start?.angle ?? 0
     this.idle()
+    this.angle((start - 180) * (Math.PI / 180))
   }
 
   walk() {
-    if (this.object.anims.current !== 'Walking') {
-      if (this.scene.inputService?.activeCamera === 0) {
-        this.scene.tweens.add({
-          targets: this.stepSound,
-          volume: 0.5,
-          duration: 300,
-        })
-        this.stepSound.resume()
-      }
+    if (tweening1) return
+    if (this.scene.inputService?.activeCamera === 0) {
+      tweening1 = true
+      tweening2 = false
+      this.stepSound.resume()
+      this.scene.tweens.add({
+        targets: this.stepSound,
+        volume: 0.5,
+        duration: 500,
+      })
     }
   }
 
   idle() {
-    if (this.object.anims.current !== 'Idle') {
-      this.scene.tweens.add({
-        targets: this.stepSound,
-        volume: 0,
-        duration: 300,
-        onComplete: () => this.stepSound.pause(),
-      })
-    }
+    if (tweening2) return
+    tweening2 = true
+    tweening1 = false
+    this.scene.tweens.add({
+      targets: this.stepSound,
+      volume: 0,
+      duration: 500,
+      onComplete: () => {
+        this.stepSound.pause()
+      },
+    })
   }
 
   teleport(x: number, z: number) {
     this.object.body.setCollisionFlags(2)
 
     this.object.position.set(x, 0, z)
+    this.object.body.needUpdate = true
+
+    this.object.body.once.update(() => {
+      this.object.body.setCollisionFlags(0)
+    })
+  }
+
+  angle(y: number) {
+    this.object.body.setCollisionFlags(2)
+
+    this.object.rotation.set(0, y, 0)
     this.object.body.needUpdate = true
 
     this.object.body.once.update(() => {

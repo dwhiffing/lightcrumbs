@@ -18,6 +18,7 @@ export class InputService {
     this.offset = new THREE.Vector3()
     const input = this.scene.input
     const { width, height } = this.scene.map!
+    theta = (this.scene.map?.mapData.start?.angle ?? 0) * -1
 
     let zoom = 20
     if (height > 72) {
@@ -135,6 +136,7 @@ export class InputService {
       duration: 300,
     })
 
+    this.pointCameraAt(0, 0)
     if (this.activeCamera === 1) {
       this.scene.ui?.hideCrumbs()
       this.pointCameraAt(0, 0)

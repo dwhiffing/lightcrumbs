@@ -22,7 +22,7 @@ export default class Menu extends Phaser.Scene {
 
     let title = this.add.image(w / 2, h / 2 - 120, 'title').setScale(2)
     title.setAlpha(0)
-    this.tweens.add({ targets: title, alpha: 0.5, duration: 30000, delay: dur })
+    this.tweens.add({ targets: title, alpha: 0.6, duration: 15000, delay: dur })
     this.cameras.main.fadeFrom(dur, 0, 0, 0)
     const music = this.sound.add('menu', { loop: true, volume: 0 })
     music.play()

@@ -38,6 +38,11 @@
                  "name":"",
                  "properties":[
                         {
+                         "name":"angle",
+                         "type":"int",
+                         "value":270
+                        }, 
+                        {
                          "name":"crumbs",
                          "type":"int",
                          "value":4
