@@ -83,7 +83,7 @@ export default class GameScene extends Scene3D {
             if (b === 1) {
               if (this.level + 1 > MAPS.length - 1) {
                 document.getElementById('enable3d-three-canvas')?.remove()
-                this.scene.start('MenuScene')
+                this.scene.start('MenuScene', { win: true })
               } else {
                 this.scene.start('GameScene', { level: this.level + 1 })
               }

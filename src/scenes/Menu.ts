@@ -2,8 +2,14 @@ import Phaser from 'phaser'
 import { DEBUG, FADE_DURATION } from '../constants'
 
 export default class Menu extends Phaser.Scene {
+  win: boolean
   constructor() {
     super('MenuScene')
+    this.win = false
+  }
+
+  init(opts: any) {
+    this.win = !!opts.win
   }
 
   create() {
@@ -71,7 +77,7 @@ export default class Menu extends Phaser.Scene {
       .on('pointerdown', onClickBottomButton)
 
     const helpText = this.add
-      .bitmapText(w / 2, h / 2 + 100, 'gem', '')
+      .bitmapText(w / 2, h / 2 + 100, 'gem', this.win ? 'You Win!' : '')
       .setOrigin(0.5)
       .setFontSize(60)
       .setCenterAlign()
