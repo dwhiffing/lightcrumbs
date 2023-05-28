@@ -134,9 +134,11 @@ export class InputService {
       duration: 300,
     })
     if (this.activeCamera === 1) {
+      this.scene.ui?.hideCrumbs()
       this.pointCameraAt(0, 0)
       this.scene.third.camera = this.firstPersonCamera!
     } else {
+      this.scene.ui?.showCrumbs()
       this.scene.third.camera = this.orthoCamera!
       const cam = this.scene.third.camera
       const _pos = new THREE.Vector3(

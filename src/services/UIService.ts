@@ -25,6 +25,14 @@ export class UIService {
     }
   }
 
+  showCrumbs() {
+    this.crumbs.forEach((c, i) => c.setAlpha(i < this.crumbCount ? 1 : 0))
+  }
+
+  hideCrumbs() {
+    this.crumbs.forEach((c, i) => c.setAlpha(0))
+  }
+
   setCrumbs(num: number) {
     this.crumbCount = num
     this.crumbs.forEach((c, i) => c.setAlpha(i < num ? 1 : 0))
