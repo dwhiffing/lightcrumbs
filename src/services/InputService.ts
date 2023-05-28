@@ -133,6 +133,7 @@ export class InputService {
       volume: this.activeCamera === 1 ? 0.01 : GAME_MUSIC_VOLUME,
       duration: 300,
     })
+
     if (this.activeCamera === 1) {
       this.scene.ui?.hideCrumbs()
       this.pointCameraAt(0, 0)
@@ -151,6 +152,8 @@ export class InputService {
     }
     this.scene.player!.object.visible = this.activeCamera === 0
     this.activeCamera = this.activeCamera ? 0 : 1
+    if (this.scene.enemy)
+      this.scene.enemy.object.visible = this.activeCamera === 0
     this.scene.map?.toggleWallColors(this.activeCamera === 1)
   }
 

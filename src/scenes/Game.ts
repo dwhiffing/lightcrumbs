@@ -52,12 +52,11 @@ export default class GameScene extends Scene3D {
     this.map = new MapService(this)
     this.map.loadLevel(this.level)
     this.player = new PlayerService(this)
+    if (this.map?.mapData.enemy) this.enemy = new EnemyService(this)
     this.ui = new UIService(this)
     this.inputService = new InputService(this)
 
     this.ui.setCrumbs(this.map.mapData.start?.crumbs ?? 5)
-
-    if (this.map?.mapData.enemy) this.enemy = new EnemyService(this)
 
     if (DEBUG) this.third.physics.debug?.enable()
 
