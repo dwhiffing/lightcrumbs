@@ -1,6 +1,6 @@
 import { THREE } from '@enable3d/phaser-extension'
 import { ThreeGraphics } from '@enable3d/three-graphics'
-import { DEBUG, SPEED } from '../constants'
+import { DEBUG, GAME_MUSIC_VOLUME, SPEED } from '../constants'
 import { MAPS } from '../maps'
 import GameScene from '../scenes/Game'
 
@@ -126,7 +126,7 @@ export class InputService {
   switchCamera = () => {
     this.scene.tweens.add({
       targets: this.scene.music,
-      volume: this.activeCamera === 1 ? 0.01 : 0.5,
+      volume: this.activeCamera === 1 ? 0.01 : GAME_MUSIC_VOLUME,
       duration: 300,
     })
     if (this.activeCamera === 1) {

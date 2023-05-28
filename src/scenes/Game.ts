@@ -4,7 +4,7 @@ import { PlayerService } from '../services/PlayerService'
 import { UIService } from '../services/UIService'
 import { InputService } from '../services/InputService'
 import { MAPS } from '../maps'
-import { DEBUG, FADE_DURATION } from '../constants'
+import { DEBUG, FADE_DURATION, GAME_MUSIC_VOLUME } from '../constants'
 import { EnemyService } from '../services/EnemyService'
 
 export default class GameScene extends Scene3D {
@@ -34,7 +34,10 @@ export default class GameScene extends Scene3D {
     this.finished = false
     const dur = FADE_DURATION
     this.cameras.main.fadeFrom(dur, 0, 0, 0)
-    this.music = this.sound.add('game', { loop: true, volume: 0.5 })
+    this.music = this.sound.add('game', {
+      loop: true,
+      volume: GAME_MUSIC_VOLUME,
+    })
     this.music.play()
     const { lights } = await this.third.warpSpeed('light')
     if (lights) {
