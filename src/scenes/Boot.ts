@@ -16,6 +16,7 @@ export default class Boot extends Phaser.Scene {
     })
     this.load.bitmapFont('gem', 'assets/gem.png', 'assets/gem.xml')
     this.load.html('star', '/assets/star.svg')
+    this.load.audio('steps', '/assets/steps.ogg')
 
     this.load.spritesheet('icons', 'assets/icons.png', {
       frameHeight: 50,

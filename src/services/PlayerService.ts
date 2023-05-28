@@ -4,6 +4,7 @@ import GameScene from '../scenes/Game'
 export class PlayerService {
   scene: GameScene
   object: ExtendedObject3D
+  stepSound: Phaser.Sound.BaseSound
 
   constructor(scene: GameScene) {
     this.scene = scene
@@ -13,7 +14,7 @@ export class PlayerService {
     this.object.name = 'player'
     this.scene.third.add.existing(this.object)
     this.scene.third.physics.add.existing(this.object, {
-      shape: 'box',
+      shape: 'cylinder',
       ignoreScale: true,
       width: 1.5,
       height: 2,
@@ -24,6 +25,10 @@ export class PlayerService {
     this.object.body.setLinearFactor(1, 1, 1)
     this.object.body.setAngularFactor(0, 0, 0)
     this.object.body.setFriction(0)
+
+    this.stepSound = this.scene.sound.add('steps', { loop: true })
+    this.stepSound.play()
+    this.stepSound.pause()
 
     this.scene.third.load.gltf('robot').then((gltf) => {
       this.object.add(gltf.scene)
@@ -44,12 +49,29 @@ export class PlayerService {
   }
 
   walk() {
-    if (this.object.anims.current !== 'Walking')
+    if (this.object.anims.current !== 'Walking') {
+      this.scene.tweens.add({
+        targets: this.stepSound,
+        volume: 0.5,
+        duration: 300,
+      })
+      this.stepSound.resume()
+
       this.object.anims.play('Walking')
+    }
   }
 
   idle() {
-    if (this.object.anims.current !== 'Idle') this.object.anims.play('Idle')
+    if (this.object.anims.current !== 'Idle') {
+      this.scene.tweens.add({
+        targets: this.stepSound,
+        volume: 0,
+        duration: 300,
+        onComplete: () => this.stepSound.pause(),
+      })
+
+      this.object.anims.play('Idle')
+    }
   }
 
   teleport(x: number, z: number) {
