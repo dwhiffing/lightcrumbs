@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { FADE_DURATION } from '../constants'
+import { DEBUG, FADE_DURATION } from '../constants'
 
 export default class Menu extends Phaser.Scene {
   constructor() {
@@ -51,6 +51,6 @@ export default class Menu extends Phaser.Scene {
         muteButton.setFrame(this.sound.mute ? 1 : 0)
       })
 
-    // this.scene.start('GameScene')
+    if (DEBUG) this.scene.start('GameScene', { level: 0 })
   }
 }

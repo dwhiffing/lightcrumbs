@@ -1,6 +1,7 @@
 import { THREE } from '@enable3d/phaser-extension'
 import { ThreeGraphics } from '@enable3d/three-graphics'
-import { SPEED, ZOOM } from '../constants'
+import { DEBUG, SPEED } from '../constants'
+import { MAPS } from '../maps'
 import GameScene from '../scenes/Game'
 
 export class InputService {
@@ -13,20 +14,31 @@ export class InputService {
 
   constructor(scene: GameScene) {
     this.scene = scene
-    this.activeCamera = 1
+    this.activeCamera = 0
     this.offset = new THREE.Vector3()
     const input = this.scene.input
+    const { width, height } = this.scene.map!
 
-    // TODO: set zoom based on size of map
-    // when ortho cam, stay centered on map instead of player
-    const w = this.scene.cameras.main.width / ZOOM
-    const h = this.scene.cameras.main.height / ZOOM
-    const config = { left: w / -2, right: w / 2, top: h / 2, bottom: h / -2 }
+    let zoom = 20
+    if (height > 72) {
+      zoom = 13.5
+    } else if (height > 36) {
+      zoom = 20
+    } else {
+      zoom = 40
+    }
+    const w = this.scene.cameras.main.width / zoom
+    const h = this.scene.cameras.main.height / zoom
+    console.log({ zoom })
+    const config = { left: w * -1, right: w, top: h, bottom: h * -1 }
+    console.log(width, height)
     this.firstPersonCamera = this.scene.third.camera
     this.orthoCamera = this.scene.third.cameras.orthographicCamera(config)
-    this.scene.third.camera = this.orthoCamera!
+    this.switchCamera()
 
     input.keyboard.on('keydown-F', this.switchCamera)
+    input.keyboard.on('keydown-L', this.nextLevel)
+    input.keyboard.on('keydown-K', this.prevLevel)
 
     input.keyboard.on('keydown-SPACE', () => {
       // @ts-ignore
@@ -54,8 +66,7 @@ export class InputService {
     const cam = this.scene.third.camera
     const pos = this.scene.player!.object.position
     const firstPerson = this.activeCamera === 0
-    const _pos = new THREE.Vector3(0, firstPerson ? 2 : 10, 0)
-    cam.position.copy(pos).add(_pos)
+    if (firstPerson) cam.position.copy(pos).add(new THREE.Vector3(0, 2, 0))
 
     let x = 0
     let z = 0
@@ -80,7 +91,6 @@ export class InputService {
         z = Math.cos(_theta - Math.PI * 0.5) * SPEED
       }
     } else {
-      cam.lookAt(pos.clone().add(new THREE.Vector3(0, 2, 0)))
       if (this.keys!.a.isDown) {
         x = -SPEED
       } else if (this.keys!.d.isDown) {
@@ -96,16 +106,34 @@ export class InputService {
     this.scene.player?.move(x, z)
   }
 
+  nextLevel = () => {
+    if (DEBUG && this.scene.level < MAPS.length - 1)
+      this.scene.scene.start('GameScene', { level: this.scene.level + 1 })
+  }
+
+  prevLevel = () => {
+    if (DEBUG && this.scene.level > 0)
+      this.scene.scene.start('GameScene', { level: this.scene.level - 1 })
+  }
+
   switchCamera = () => {
     if (this.activeCamera === 1) {
       this.pointCameraAt(0, 0)
       this.scene.third.camera = this.firstPersonCamera!
     } else {
       this.scene.third.camera = this.orthoCamera!
+      const cam = this.scene.third.camera
+      const _pos = new THREE.Vector3(
+        this.scene.map!.width / 2,
+        10,
+        this.scene.map!.height / 2,
+      )
+      cam.position.copy(_pos)
+      cam.lookAt(_pos.clone().add(new THREE.Vector3(0, -8, 0)))
     }
     this.scene.player!.object.visible = this.activeCamera === 0
     this.activeCamera = this.activeCamera ? 0 : 1
-    this.scene.map?.toggleWallColors()
+    this.scene.map?.toggleWallColors(this.activeCamera === 1)
   }
 
   pointCameraAt(dx: number, dy: number, r = 8) {

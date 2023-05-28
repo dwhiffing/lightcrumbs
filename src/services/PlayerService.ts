@@ -14,9 +14,9 @@ export class PlayerService {
     this.scene.third.physics.add.existing(this.object, {
       shape: 'box',
       ignoreScale: true,
-      width: 0.5,
+      width: 1.5,
       height: 2,
-      depth: 0.5,
+      depth: 1.5,
       offset: { y: -0.625 },
     })
     this.object.body.setLinearFactor(1, 1, 1)
@@ -25,7 +25,7 @@ export class PlayerService {
 
     this.scene.third.load.gltf('robot').then((gltf) => {
       this.object.add(gltf.scene)
-      const scale = 1 / 3
+      const scale = 0.75
       this.object.scale.set(scale, scale, scale)
       // this.object.position.setY(0)
 
@@ -87,6 +87,8 @@ export class PlayerService {
     } else {
       this.idle()
     }
+
+    if (this.scene.inputService?.activeCamera === 0) v = 0
 
     this.object.body?.setVelocity(x, 0, z)
     this.object.body?.setAngularVelocityY(v)

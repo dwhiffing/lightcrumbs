@@ -20,11 +20,16 @@ interface Coord {
 export class MapService {
   stars: ExtendedObject3D[]
   scene: GameScene
+  width: number
+  exit: any
+  height: number
   mapData: { walls: number[][]; exit?: Coord; start?: Coord }
 
   constructor(scene: GameScene) {
     this.scene = scene
     this.stars = []
+    this.width = 0
+    this.height = 0
     this.mapData = { walls: [], exit: undefined, start: undefined }
   }
 
@@ -55,8 +60,10 @@ export class MapService {
   }
 
   addGround() {
-    const width = this.mapData.walls[0].length * w
-    const height = this.mapData.walls.length * w
+    this.width = this.mapData.walls[0].length * w
+    this.height = this.mapData.walls.length * w
+    const width = this.width
+    const height = this.height
     const hw = width / 2
     const hh = height / 2
     const hd = w / 2
@@ -88,7 +95,7 @@ export class MapService {
     const star = this.scene.third.add.extrude({ shape, depth: 200 }) as any
 
     star.name = `star-${this.stars.length}`
-    star.scale.set(1 / 1000, 1 / -1000, 1 / 1000)
+    star.scale.set(1 / 300, 1 / -300, 1 / 300)
     star.material = star.material.clone()
     star.material.color.setHex(0xffd851)
     star.position.set(x, 1, z)
@@ -108,10 +115,10 @@ export class MapService {
     const svg = this.scene.cache.html.get('star')
     const shape = this.scene.third.transform.fromSVGtoShape(svg)[0]
     // @ts-ignore
-    const star = this.scene.third.add.extrude({ shape, depth: 200 }) as any
-
+    const star = this.scene.third.add.extrude({ shape, depth: 100 }) as any
+    this.exit = star
     star.name = `exit`
-    star.scale.set(1 / 1000, 1 / -1000, 1 / 1000)
+    star.scale.set(1 / 150, 1 / -150, 1 / 150)
     star.material.color.setHex(0xff0000)
     star.position.set(x, 1, z)
     this.scene.third.physics.add.existing(star, {
@@ -140,16 +147,18 @@ export class MapService {
     )
   }
 
-  toggleWallColors() {
+  toggleWallColors(value: boolean) {
     this.scene.third.physics.rigidBodies.forEach((b) => {
       if (b.name.includes('wall')) {
         const mat = b.material as any
-        if (!DEBUG) mat.color.setHex(mat.color.r === 0 ? 0x151515 : 0x000000)
+        if (!DEBUG) mat.color.setHex(value ? 0x151515 : 0x000000)
       }
     })
   }
 
   update() {
+    this.exit.rotation.y += 0.03
+    this.exit.body.needUpdate = true
     this.stars.forEach((star) => {
       if (star.visible) {
         star.rotation.y += 0.03
