@@ -97,6 +97,9 @@ follow it.`,
   `It is pitch black
 in there, so you must
 use lightcrumbs to see.`,
+  `You can see your
+remaining lightcrumbs
+at the bottom left`,
   `Good luck!`,
   `Concept & Code: Dan Whiffing
 Sounds: pixabay.com
