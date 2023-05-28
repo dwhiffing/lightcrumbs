@@ -50,12 +50,14 @@ export class PlayerService {
 
   walk() {
     if (this.object.anims.current !== 'Walking') {
-      this.scene.tweens.add({
-        targets: this.stepSound,
-        volume: 0.5,
-        duration: 300,
-      })
-      this.stepSound.resume()
+      if (this.scene.inputService?.activeCamera === 0) {
+        this.scene.tweens.add({
+          targets: this.stepSound,
+          volume: 0.5,
+          duration: 300,
+        })
+        this.stepSound.resume()
+      }
 
       this.object.anims.play('Walking')
     }
