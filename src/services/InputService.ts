@@ -34,10 +34,12 @@ export class InputService {
     this.orthoCamera = this.scene.third.cameras.orthographicCamera(config)
     this.switchCamera()
 
+    // if (DEBUG) {
     input.keyboard.on('keydown-F', this.switchCamera)
     input.keyboard.on('keydown-L', this.nextLevel)
     input.keyboard.on('keydown-K', this.prevLevel)
-
+    // }
+    input.keyboard.on('keydown-R', this.restartLevel)
     input.keyboard.on('keydown-SPACE', () => {
       // @ts-ignore
       const { x, z } = this.scene.player?.object.position
@@ -106,12 +108,16 @@ export class InputService {
   }
 
   nextLevel = () => {
-    if (DEBUG && this.scene.level < MAPS.length - 1)
+    if (this.scene.level < MAPS.length - 1)
       this.scene.scene.start('GameScene', { level: this.scene.level + 1 })
   }
 
+  restartLevel = () => {
+    this.scene.scene.start('GameScene', { level: this.scene.level })
+  }
+
   prevLevel = () => {
-    if (DEBUG && this.scene.level > 0)
+    if (this.scene.level > 0)
       this.scene.scene.start('GameScene', { level: this.scene.level - 1 })
   }
 
