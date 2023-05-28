@@ -1,7 +1,7 @@
 {
   "name": "lightcrumbs",
   "version": "1.1.0",
-  "description": "Tojam 2023",
+  "description": "Lightcrumbs",
   "main": "dist/index.js",
   "scripts": {
     "dev": "vite --port 8080",
