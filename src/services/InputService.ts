@@ -79,34 +79,35 @@ export class InputService {
     let z = 0
 
     const rotation = cam.getWorldDirection(new THREE.Vector3())
+    if (!this.scene.enemy?.isEating) {
+      if (firstPerson) {
+        const _theta = Math.atan2(rotation.x, rotation.z)
+        if (this.keys!.w.isDown) {
+          x = Math.sin(_theta) * SPEED
+          z = Math.cos(_theta) * SPEED
+        } else if (this.keys!.s.isDown) {
+          x = -(Math.sin(_theta) * SPEED)
+          z = -(Math.cos(_theta) * SPEED)
+        }
 
-    if (firstPerson) {
-      const _theta = Math.atan2(rotation.x, rotation.z)
-      if (this.keys!.w.isDown) {
-        x = Math.sin(_theta) * SPEED
-        z = Math.cos(_theta) * SPEED
-      } else if (this.keys!.s.isDown) {
-        x = -(Math.sin(_theta) * SPEED)
-        z = -(Math.cos(_theta) * SPEED)
-      }
-
-      if (this.keys!.a.isDown) {
-        x = Math.sin(_theta + Math.PI * 0.5) * SPEED
-        z = Math.cos(_theta + Math.PI * 0.5) * SPEED
-      } else if (this.keys!.d.isDown) {
-        x = Math.sin(_theta - Math.PI * 0.5) * SPEED
-        z = Math.cos(_theta - Math.PI * 0.5) * SPEED
-      }
-    } else {
-      if (this.keys!.a.isDown) {
-        x = -SPEED * 2
-      } else if (this.keys!.d.isDown) {
-        x = SPEED * 2
-      }
-      if (this.keys!.w.isDown) {
-        z = -SPEED * 2
-      } else if (this.keys!.s.isDown) {
-        z = SPEED * 2
+        if (this.keys!.a.isDown) {
+          x = Math.sin(_theta + Math.PI * 0.5) * SPEED
+          z = Math.cos(_theta + Math.PI * 0.5) * SPEED
+        } else if (this.keys!.d.isDown) {
+          x = Math.sin(_theta - Math.PI * 0.5) * SPEED
+          z = Math.cos(_theta - Math.PI * 0.5) * SPEED
+        }
+      } else {
+        if (this.keys!.a.isDown) {
+          x = -SPEED * 2
+        } else if (this.keys!.d.isDown) {
+          x = SPEED * 2
+        }
+        if (this.keys!.w.isDown) {
+          z = -SPEED * 2
+        } else if (this.keys!.s.isDown) {
+          z = SPEED * 2
+        }
       }
     }
 
@@ -138,6 +139,7 @@ export class InputService {
       this.scene.ui?.hideCrumbs()
       this.pointCameraAt(0, 0)
       this.scene.third.camera = this.firstPersonCamera!
+      this.scene.enemy?.unmute()
     } else {
       this.scene.ui?.showCrumbs()
       this.scene.third.camera = this.orthoCamera!
@@ -149,11 +151,12 @@ export class InputService {
       )
       cam.position.copy(_pos)
       cam.lookAt(_pos.clone().add(new THREE.Vector3(0, -8, 0)))
+      this.scene.enemy?.mute()
     }
     this.scene.player!.object.visible = this.activeCamera === 0
     this.activeCamera = this.activeCamera ? 0 : 1
     if (this.scene.enemy)
-      this.scene.enemy.object.visible = this.activeCamera === 0
+      this.scene.enemy.object.visible = DEBUG || this.activeCamera === 0
     this.scene.map?.toggleWallColors(this.activeCamera === 1)
   }
 

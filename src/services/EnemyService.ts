@@ -2,29 +2,45 @@ import { THREE, ExtendedObject3D } from '@enable3d/phaser-extension'
 import { DEBUG } from '../constants'
 import GameScene from '../scenes/Game'
 
+let listener: THREE.AudioListener
+let sound: THREE.PositionalAudio
 export class EnemyService {
   scene: GameScene
   object: ExtendedObject3D
   isColliding: boolean
+  isEating: boolean
 
   constructor(scene: GameScene) {
     this.scene = scene
 
     const { x, z } = this.scene.map?.mapData.enemy!
     const y = 3
-    const svg = this.scene.cache.html.get('star')
-    const shape = this.scene.third.transform.fromSVGtoShape(svg)[0]
-    // @ts-ignore
-    this.object = this.scene.third.add.extrude({ shape, depth: 200 }) as any
+    this.isEating = false
+    this.object = this.scene.third.add.box(
+      {
+        width: 2.5,
+        height: 4,
+        depth: 2,
+      },
+      { phong: { transparent: false, color: DEBUG ? 0x440000 : 0x000000 } },
+    )
+
+    const eye1 = this.scene.third.add.sphere(
+      { radius: 0.1, x: 0.4, z: 1, y: 1.3 },
+      { phong: { transparent: false, color: 0xff0000 } },
+    )
+    const eye2 = this.scene.third.add.sphere(
+      { radius: 0.1, x: -0.4, z: 1, y: 1.3 },
+      { phong: { transparent: false, color: 0xff0000 } },
+    )
+
+    this.object.add(eye1)
+    this.object.add(eye2)
 
     this.object.name = `enemy`
-    this.object.scale.set(1 / 100, 1 / -100, 1 / 100)
-    // @ts-ignore
-    this.object.material = this.object.material.clone()
-    // @ts-ignore
-    this.object.material.color.setHex(DEBUG ? 0xff0000 : 0x000000)
     this.object.position.set(x, y, z)
-    this.object.rotation.set(0, Math.PI / 2, 0)
+    const left = false
+    this.object.rotation.set(0, left ? Math.PI / -2 : Math.PI / 2, 0)
     this.scene.third.physics.add.existing(this.object, {
       shape: 'box',
       ignoreScale: true,
@@ -42,7 +58,7 @@ export class EnemyService {
 
     const sensor = this.scene.third.physics.add.cylinder(
       {
-        x: x + 1,
+        x: x + (left ? -1 : 1),
         y: y,
         z: z,
         height: 2,
@@ -59,11 +75,24 @@ export class EnemyService {
 
     this.scene.third.physics.add.constraints.lock(this.object.body, sensor.body)
 
+    if (!sound) {
+      listener = new THREE.AudioListener()
+      sound = new THREE.PositionalAudio(listener)
+      sound.setRefDistance(3)
+      sound.setRolloffFactor(7)
+      sound.loop = true
+      sound.play()
+    }
     this.isColliding = false
     sensor.body.on.collision((otherObject, event) => {
-      if (otherObject.name.includes('player')) {
-        if (this.scene.inputService?.activeCamera === 0)
-          this.scene.scene.start('GameScene', { level: this.scene.level })
+      if (otherObject.name.includes('player') && !this.isEating) {
+        if (this.scene.inputService?.activeCamera === 0) {
+          this.isEating = true
+          this.scene.sound.play('growl')
+          this.scene.time.delayedCall(5000, () => {
+            this.scene.scene.start('GameScene', { level: this.scene.level })
+          })
+        }
       }
       if (otherObject.name.includes('wall')) {
         this.isColliding = true
@@ -75,19 +104,21 @@ export class EnemyService {
       }
     })
 
-    const listener = new THREE.AudioListener()
     this.scene.third.camera.add(listener)
-    const sound = new THREE.PositionalAudio(listener)
     const audioLoader = new THREE.AudioLoader()
     audioLoader.load('assets/monster.mp3', function (buffer) {
       sound.setBuffer(buffer)
-      sound.setRefDistance(3)
-      sound.setRolloffFactor(7)
-      sound.loop = true
-      sound.play()
     })
 
     this.object.add(sound)
+  }
+
+  mute() {
+    sound.stop()
+  }
+
+  unmute() {
+    sound.play()
   }
 
   update() {
@@ -101,7 +132,7 @@ export class EnemyService {
     const x = Math.sin(theta) * speed,
       y = this.object.body.velocity.y,
       z = Math.cos(theta) * speed
-    if (this.isColliding) {
+    if (this.isColliding || this.isEating) {
       this.object.body.setVelocity(0, 0, 0)
     } else {
       this.object.body.setVelocity(x, y, z)
