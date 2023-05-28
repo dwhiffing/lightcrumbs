@@ -42,6 +42,7 @@ export class InputService {
       // @ts-ignore
       const { x, z } = this.scene.player?.object.position
       this.scene.map?.addStar(x, z)
+      this.scene.sound.play('place')
     })
 
     input.on('pointerdown', () => input.mouse.requestPointerLock())

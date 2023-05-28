@@ -65,12 +65,15 @@ export default class GameScene extends Scene3D {
         if (!otherObject.userData.dead) {
           otherObject.userData.dead = true
           otherObject.visible = false
+          this.sound.play('scale')
           this.ui!.setScore(10)
         }
       }
       if (/exit/.test(otherObject.name) && !this.finished) {
         this.finished = true
         if (this.inputService?.activeCamera === 0) {
+          this.sound.play('door')
+
           this.cameras.main.fade(dur, 0, 0, 0, true, (_: any, b: number) => {
             if (b === 1) {
               if (this.level + 1 > MAPS.length - 1) {
@@ -82,6 +85,7 @@ export default class GameScene extends Scene3D {
             }
           })
         } else {
+          this.sound.play('finish')
           const { x, z } = this.map?.mapData.start!
           this.cameras.main.fade(dur, 0, 0, 0, true, (_: any, b: number) => {
             if (b === 1) {
