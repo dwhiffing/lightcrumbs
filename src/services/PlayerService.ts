@@ -16,9 +16,8 @@ export class PlayerService {
     this.scene.third.physics.add.existing(this.object, {
       shape: 'cylinder',
       ignoreScale: true,
-      width: 1.5,
+      radius: 1.5,
       height: 2,
-      depth: 1.5,
       offset: { y: -0.625 },
       collisionGroup: 4,
     })
