@@ -14,7 +14,7 @@ export class UIService {
     // })
 
     this.scoreText = this.scene.add
-      .text(32, this.scene.cameras.main.height - 32, 'score: 0', {
+      .text(32, this.scene.cameras.main.height - 32, '', {
         fontSize: '32px',
       })
       .setOrigin(0, 1)
@@ -37,7 +37,7 @@ export class UIService {
 
   setScore(score: number) {
     this.score += score
-    this.scoreText.setText(`score: ${this.score}`)
+    // this.scoreText.setText(`score: ${this.score}`)
   }
 
   update() {}
