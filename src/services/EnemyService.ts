@@ -9,6 +9,8 @@ export class EnemyService {
   object: ExtendedObject3D
   isColliding: boolean
   isEating: boolean
+  isTurning: boolean
+  isChasing: boolean
 
   constructor(scene: GameScene) {
     this.scene = scene
@@ -16,6 +18,8 @@ export class EnemyService {
     const { x, z } = this.scene.map?.mapData.enemy!
     const y = 3
     this.isEating = false
+    this.isTurning = false
+    this.isChasing = false
     this.object = this.scene.third.add.box(
       {
         width: 2.5,
@@ -44,9 +48,9 @@ export class EnemyService {
     this.scene.third.physics.add.existing(this.object, {
       shape: 'box',
       ignoreScale: true,
-      width: 0.5,
+      width: 1.5,
       height: 3,
-      depth: 0.5,
+      depth: 1.5,
       mass: 500,
       collisionGroup: 2,
       collisionMask: 3,
@@ -56,24 +60,45 @@ export class EnemyService {
     this.object.body.setAngularFactor(0, 0, 0)
     this.object.body.setFriction(10)
 
+    const sensorConfigBase = {
+      y: y,
+      z: z,
+      height: 2,
+      radiusTop: 1.1,
+      radiusBottom: 1.1,
+      radiusBody: 1.1,
+      collisionFlags: 1,
+      mass: 0.001,
+    }
+
     const sensor = this.scene.third.physics.add.cylinder(
       {
+        ...sensorConfigBase,
         x: x + (left ? -1 : 1),
-        y: y,
-        z: z,
-        height: 2,
-        radiusTop: 1.3,
-        radiusBottom: 1.3,
-        radiusBody: 1.3,
-        collisionFlags: 1,
-        mass: 0.001,
       },
       { lambert: { color: 0xff00ff, transparent: true, opacity: 0 } },
     )
+    const backSensor = this.scene.third.physics.add.cylinder(
+      {
+        ...sensorConfigBase,
+        x: x + (left ? 3 : -3),
+        radiusTop: 3,
+        radiusBottom: 3,
+        radiusBody: 3,
+      },
+      { lambert: { color: 0xff0000, transparent: true, opacity: 0 } },
+    )
     sensor.castShadow = sensor.receiveShadow = false
+    backSensor.castShadow = backSensor.receiveShadow = false
     sensor.body.setCollisionFlags(4)
+    backSensor.body.setCollisionFlags(4)
 
     this.scene.third.physics.add.constraints.lock(this.object.body, sensor.body)
+
+    this.scene.third.physics.add.constraints.lock(
+      this.object.body,
+      backSensor.body,
+    )
 
     if (!sound) {
       listener = new THREE.AudioListener()
@@ -85,22 +110,31 @@ export class EnemyService {
     }
     this.isColliding = false
     sensor.body.on.collision((otherObject, event) => {
-      if (otherObject.name.includes('player') && !this.isEating) {
-        if (this.scene.inputService?.activeCamera === 0) {
-          this.isEating = true
-          this.scene.sound.play('growl')
-          this.scene.time.delayedCall(5000, () => {
-            this.scene.scene.start('GameScene', { level: this.scene.level })
-          })
-        }
-      }
-      if (otherObject.name.includes('wall')) {
+      if (otherObject.name.includes('player')) this.eat()
+      if (otherObject.name.includes('wall') && !this.isTurning) {
         this.isColliding = true
         this.object.body.setAngularVelocityY(1)
       }
-      if (event === 'end') {
+      if (event === 'end' && !this.isTurning) {
         this.isColliding = false
         this.object.body.setAngularVelocityY(0)
+      }
+    })
+
+    backSensor.body.on.collision((otherObject) => {
+      if (this.scene.inputService?.activeCamera !== 0) return
+      if (otherObject.name.includes('player') && !this.isTurning) {
+        this.isTurning = true
+        this.object.body.setAngularVelocityY(12)
+        this.scene.time.delayedCall(250, () => {
+          this.isChasing = true
+          this.isTurning = false
+          this.object.lookAt(this.scene.player!.object.position.clone())
+          this.scene.time.delayedCall(3000, () => {
+            this.isChasing = false
+          })
+          this.object.body.setAngularVelocityY(0)
+        })
       }
     })
 
@@ -113,6 +147,18 @@ export class EnemyService {
     this.object.add(sound)
   }
 
+  eat() {
+    if (!this.isEating) {
+      if (this.scene.inputService?.activeCamera === 0) {
+        this.isEating = true
+        this.scene.sound.play('growl')
+        this.scene.time.delayedCall(5000, () => {
+          this.scene.scene.start('GameScene', { level: this.scene.level })
+        })
+      }
+    }
+  }
+
   mute() {
     sound.stop()
   }
@@ -123,7 +169,7 @@ export class EnemyService {
 
   update() {
     if (this.scene.inputService?.activeCamera === 1) return
-    const speed = 3.5
+    const speed = this.isTurning ? 0 : this.isChasing ? 6 : 4
     const rotation = this.object.getWorldDirection(
       new THREE.Vector3()?.setFromEuler?.(this.object.rotation),
     )
