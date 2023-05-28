@@ -10,6 +10,7 @@ export class PlayerService {
     const { x, z } = this.scene.map?.mapData.start!
     this.object = new ExtendedObject3D()
     this.object.position.set(x, 0, z)
+    this.object.name = 'player'
     this.scene.third.add.existing(this.object)
     this.scene.third.physics.add.existing(this.object, {
       shape: 'box',
@@ -18,6 +19,7 @@ export class PlayerService {
       height: 2,
       depth: 1.5,
       offset: { y: -0.625 },
+      collisionGroup: 4,
     })
     this.object.body.setLinearFactor(1, 1, 1)
     this.object.body.setAngularFactor(0, 0, 0)
