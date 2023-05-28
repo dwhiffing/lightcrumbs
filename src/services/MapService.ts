@@ -15,6 +15,7 @@ interface Coord {
   gid: number
   x: number
   z: number
+  crumbs?: number
 }
 
 export class MapService {
@@ -51,6 +52,7 @@ export class MapService {
       gid: d.gid,
       x: (d.x + 4) / ratio,
       z: (d.y - 4) / ratio,
+      crumbs: d.properties?.find((d: any) => d.name === 'crumbs').value,
     })) as unknown as Coord[]
 
     this.mapData = {

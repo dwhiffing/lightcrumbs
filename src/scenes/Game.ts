@@ -55,8 +55,7 @@ export default class GameScene extends Scene3D {
     this.ui = new UIService(this)
     this.inputService = new InputService(this)
 
-    // TODO: get crumbs from map
-    this.ui?.setCrumbs(5)
+    this.ui.setCrumbs(this.map.mapData.start?.crumbs ?? 5)
 
     if (this.map?.mapData.enemy) this.enemy = new EnemyService(this)
 

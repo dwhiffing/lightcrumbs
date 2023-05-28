@@ -82,7 +82,7 @@ export default class Menu extends Phaser.Scene {
       .setFontSize(60)
       .setCenterAlign()
 
-    if (DEBUG) this.scene.start('GameScene', { level: 1 })
+    if (DEBUG) this.scene.start('GameScene', { level: 0 })
   }
 }
 

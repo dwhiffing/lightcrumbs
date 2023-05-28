@@ -36,6 +36,12 @@
                  "height":8,
                  "id":2,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"crumbs",
+                         "type":"int",
+                         "value":3
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

@@ -9,6 +9,7 @@ export class PlayerService {
   constructor(scene: GameScene) {
     this.scene = scene
     const { x, z } = this.scene.map?.mapData.start!
+
     this.object = new ExtendedObject3D()
     this.object.position.set(x, 0, z)
     this.object.name = 'player'
