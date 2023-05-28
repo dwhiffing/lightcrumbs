@@ -29,9 +29,7 @@ export class InputService {
     }
     const w = this.scene.cameras.main.width / zoom
     const h = this.scene.cameras.main.height / zoom
-    console.log({ zoom })
     const config = { left: w * -1, right: w, top: h, bottom: h * -1 }
-    console.log(width, height)
     this.firstPersonCamera = this.scene.third.camera
     this.orthoCamera = this.scene.third.cameras.orthographicCamera(config)
     this.switchCamera()

@@ -4,11 +4,13 @@ import { PlayerService } from '../services/PlayerService'
 import { UIService } from '../services/UIService'
 import { InputService } from '../services/InputService'
 import { MAPS } from '../maps'
-import { FADE_DURATION } from '../constants'
+import { DEBUG, FADE_DURATION } from '../constants'
+import { EnemyService } from '../services/EnemyService'
 
 export default class GameScene extends Scene3D {
   map?: MapService
   player?: PlayerService
+  enemy?: EnemyService
   ui?: UIService
   inputService?: InputService
   finished: boolean
@@ -47,7 +49,9 @@ export default class GameScene extends Scene3D {
     this.player = new PlayerService(this)
     this.ui = new UIService(this)
     this.inputService = new InputService(this)
-    // this.third.physics.debug.enable()
+    if (this.map?.mapData.enemy) this.enemy = new EnemyService(this)
+
+    if (DEBUG) this.third.physics.debug?.enable()
 
     // check player overlap with star
     this.player.object.body.on.collision((otherObject, event) => {
@@ -94,5 +98,6 @@ export default class GameScene extends Scene3D {
   update() {
     this.map?.update()
     this.inputService?.update()
+    this.enemy?.update()
   }
 }

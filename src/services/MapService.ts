@@ -23,14 +23,19 @@ export class MapService {
   width: number
   exit: any
   height: number
-  mapData: { walls: number[][]; exit?: Coord; start?: Coord }
+  mapData: { walls: number[][]; enemy?: Coord; exit?: Coord; start?: Coord }
 
   constructor(scene: GameScene) {
     this.scene = scene
     this.stars = []
     this.width = 0
     this.height = 0
-    this.mapData = { walls: [], exit: undefined, start: undefined }
+    this.mapData = {
+      walls: [],
+      enemy: undefined,
+      exit: undefined,
+      start: undefined,
+    }
   }
 
   loadLevel(levelIndex: number) {
@@ -50,6 +55,7 @@ export class MapService {
 
     this.mapData = {
       walls: MAP as number[][],
+      enemy: OBJECTS.find((g) => g.gid === 58)!,
       exit: OBJECTS.find((g) => g.gid === 25)!,
       start: OBJECTS.find((g) => g.gid === 1)!,
     }
@@ -119,7 +125,7 @@ export class MapService {
     this.exit = star
     star.name = `exit`
     star.scale.set(1 / 150, 1 / -150, 1 / 150)
-    star.material.color.setHex(0xff0000)
+    star.material.color.setHex(0x00ff00)
     star.position.set(x, 1, z)
     this.scene.third.physics.add.existing(star, {
       shape: 'box',
