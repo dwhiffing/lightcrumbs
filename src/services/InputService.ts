@@ -160,7 +160,7 @@ export class InputService {
     theta -= dx * (0.25 / 2)
     theta %= 360
     phi += dy * (-0.25 / 2)
-    phi = Math.min(15, Math.max(-15, phi))
+    phi = 5
 
     const lookAt = new THREE.Vector3()
     lookAt.x =
@@ -177,4 +177,4 @@ export class InputService {
 }
 
 let theta = 0
-let phi = 0
+let phi = 5
