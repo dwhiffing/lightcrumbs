@@ -99,7 +99,9 @@ in there, so you must
 use lightcrumbs to see.`,
   `You can see your
 remaining lightcrumbs
-at the bottom left`,
+at the bottom left.`,
+  `Press R if you need
+to restart.`,
   `Good luck!`,
   `Concept & Code: Dan Whiffing
 Sounds: pixabay.com
