@@ -101,7 +101,7 @@ export default class GameScene extends Scene3D {
                 this.finished = false
                 this.cameras.main.fadeFrom(dur, 0, 0, 0)
                 this.inputService?.switchCamera()
-              }, 50)
+              }, 500)
             }
           })
         }
