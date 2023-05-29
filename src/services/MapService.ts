@@ -125,12 +125,13 @@ export class MapService {
     const svg = this.scene.cache.html.get('star')
     const shape = this.scene.third.transform.fromSVGtoShape(svg)[0]
     // @ts-ignore
-    const star = this.scene.third.add.extrude({ shape, depth: 100 }) as any
+    const star = this.scene.third.add.extrude({ shape, depth: 50 }) as any
     this.exit = star
     star.name = `exit`
     star.scale.set(1 / 150, 1 / -150, 1 / 150)
     star.material.color.setHex(0x00ff00)
-    star.position.set(x, 1, z)
+    star.position.set(x, -0.5, z)
+    star.rotation.set(Math.PI / 2, 0, Math.PI / 2)
     this.scene.third.physics.add.existing(star, {
       shape: 'box',
       ignoreScale: true,
@@ -167,7 +168,7 @@ export class MapService {
   }
 
   update() {
-    this.exit.rotation.y += 0.03
+    this.exit.rotation.z += 0.03
     this.exit.body.needUpdate = true
     this.stars.forEach((star) => {
       if (star.visible) {
