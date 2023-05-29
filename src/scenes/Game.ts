@@ -101,7 +101,10 @@ export default class GameScene extends Scene3D {
                 this.finished = false
                 this.cameras.main.fadeFrom(dur, 0, 0, 0)
                 this.inputService?.switchCamera()
-              }, 500)
+                setTimeout(() => {
+                  this.inputService!.pointCameraAt(10, 0)
+                }, 100)
+              }, 1000)
             }
           })
         }

@@ -114,6 +114,7 @@ export class InputService {
   }
 
   restartLevel = () => {
+    this.scene.player?.stepSound.stop()
     this.scene.scene.start('GameScene', { level: this.scene.level })
   }
 
