@@ -37,7 +37,7 @@ export class InputService {
     this.orthoCamera = this.scene.third.cameras.orthographicCamera(config)
     this.switchCamera()
 
-    if (true || DEBUG) {
+    if (DEBUG) {
       input.keyboard.on('keydown-F', this.switchCamera)
       input.keyboard.on('keydown-L', this.nextLevel)
       input.keyboard.on('keydown-K', this.prevLevel)
