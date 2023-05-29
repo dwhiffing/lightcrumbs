@@ -15,11 +15,13 @@ export default class GameScene extends Scene3D {
   inputService?: InputService
   music?: Phaser.Sound.BaseSound
   finished: boolean
+  finishedPlanning: boolean
   level: number
 
   constructor() {
     super({ key: 'GameScene' })
     this.finished = false
+    this.finishedPlanning = false
     this.level = 0
   }
 
@@ -31,6 +33,7 @@ export default class GameScene extends Scene3D {
 
   async create() {
     this.finished = false
+    this.finishedPlanning = false
     const dur = FADE_DURATION
     this.cameras.main.fadeFrom(dur, 0, 0, 0)
     if (!this.music) {
@@ -74,9 +77,13 @@ export default class GameScene extends Scene3D {
           this.sound.play('scale')
         }
       }
-      if (/exit/.test(otherObject.name) && !this.finished) {
+      if (
+        /exit/.test(otherObject.name) &&
+        !this.finished &&
+        event === 'start'
+      ) {
         this.finished = true
-        if (this.inputService?.activeCamera === 0) {
+        if (this.inputService?.activeCamera === 0 && this.finishedPlanning) {
           this.sound.play('door')
 
           const _dur = dur * 2
@@ -103,8 +110,9 @@ export default class GameScene extends Scene3D {
                 this.inputService?.switchCamera()
                 setTimeout(() => {
                   this.inputService!.pointCameraAt(10, 0)
-                }, 100)
-              }, 1000)
+                  this.finishedPlanning = true
+                }, 500)
+              }, 50)
             }
           })
         }
