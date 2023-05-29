@@ -102,7 +102,7 @@ export class MapService {
     const svg = this.scene.cache.html.get('star')
     const shape = this.scene.third.transform.fromSVGtoShape(svg)[0]
     // @ts-ignore
-    const star = this.scene.third.add.extrude({ shape, depth: 200 }) as any
+    const star = this.scene.third.add.extrude({ shape, depth: 50 }) as any
 
     star.name = `star-${this.stars.length}`
     star.scale.set(1 / 300, 1 / -300, 1 / 300)
