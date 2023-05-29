@@ -24,7 +24,9 @@ export class InputService {
     if (height > 72) {
       zoom = 13.5
     } else if (height > 36) {
-      zoom = 20
+      zoom = 27
+    } else if (height > 28) {
+      zoom = 30
     } else {
       zoom = 40
     }
